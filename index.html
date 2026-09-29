@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNAPS — Skills Network & Professional Services</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534'
+                        },
+                        cream: '#FDFBF7',
+                        accent: '#F3EFE0'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #FDFBF7;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .soft-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        }
+    </style>
+</head>
+<body class="text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-brand-600 text-white px-6 py-4 rounded-xl shadow-lg flex items-center space-x-3">
+        <i class="fas fa-check-circle text-2xl"></i>
+        <span id="toast-message" class="font-medium">Berhasil!</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
+                    <div class="bg-brand-600 text-white p-2.5 rounded-2xl shadow-md shadow-brand-500/20">
+                        <i class="fas fa-bolt text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-bold tracking-tight text-gray-900">SNAPS<span class="text-brand-600">.</span></span>
+                        <p class="text-[10px] text-gray-500 font-medium tracking-wider -mt-1">SKILLS NETWORK</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <button onclick="showPage('home')" class="text-gray-600 hover:text-brand-600 font-medium transition">Beranda</button>
+                    <button onclick="showPage('cari-skill')" class="text-gray-600 hover:text-brand-600 font-medium transition">Cari Skill</button>
+                    <button onclick="showPage('daftarkan-skill')" class="text-gray-600 hover:text-brand-600 font-medium transition">Daftarkan Skill</button>
+                    <!-- Tampilan khusus Admin berdasarkan Core Wireframe/Bagan -->
+                    <button onclick="showPage('admin-dashboard')" class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-lg font-semibold text-xs border border-amber-300 hover:bg-amber-200 transition flex items-center gap-1.5">
+                        <i class="fas fa-user-shield text-amber-600"></i> Mode Admin
+                    </button>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button onclick="showPage('login')" class="text-brand-600 font-semibold hover:text-brand-700 px-4 py-2 transition">Masuk</button>
+                    <button onclick="showPage('login')" class="bg-brand-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-brand-700 transition shadow-lg shadow-brand-600/20">Daftar</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-600 hover:text-brand-600 p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-6 space-y-3">
+            <button onclick="showPage('home'); toggleMobileMenu()" class="block w-full text-left py-2 font-medium text-gray-700">Beranda</button>
+            <button onclick="showPage('cari-skill'); toggleMobileMenu()" class="block w-full text-left py-2 font-medium text-gray-700">Cari Skill</button>
+            <button onclick="showPage('daftarkan-skill'); toggleMobileMenu()" class="block w-full text-left py-2 font-medium text-gray-700">Daftarkan Skill</button>
+            <button onclick="showPage('admin-dashboard'); toggleMobileMenu()" class="block w-full text-left py-2 font-medium text-amber-800 bg-amber-50 rounded-lg px-3">
+                <i class="fas fa-user-shield text-amber-600 mr-2"></i> Mode Admin (Pengelola)
+            </button>
+            <div class="pt-4 border-t flex flex-col space-y-2">
+                <button onclick="showPage('login'); toggleMobileMenu()" class="w-full text-center py-2.5 text-brand-600 font-semibold border border-brand-600 rounded-xl">Masuk</button>
+                <button onclick="showPage('login'); toggleMobileMenu()" class="w-full text-center py-2.5 bg-brand-600 text-white font-semibold rounded-xl">Daftar</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENT SECTIONS -->
+
+    <!-- 1. HALAMAN BERANDA -->
+    <div id="page-home" class="page-section flex-grow">
+        <!-- Hero Section -->
+        <div class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-3xl mx-auto">
+                    <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-100 text-brand-800 text-sm font-semibold mb-6">
+                        <i class="fas fa-sparkles text-brand-600"></i> Platform Jasa #1 Untuk Talent Lokal
+                    </span>
+                    <h1 class="text-4xl sm:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6">
+                        Temukan Skill yang <br class="hidden sm:inline"><span class="text-brand-600">Kamu Butuhkan</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-10 leading-relaxed">
+                        Temukan orang dengan keahlian yang sesuai di sekitarmu. Hubungi langsung penyedia jasa tanpa ribet.
+                    </p>
+
+                    <!-- Main Search Box -->
+                    <div class="bg-white p-3 rounded-2xl soft-shadow border border-gray-100 max-w-2xl mx-auto flex flex-col sm:flex-row gap-3">
+                        <div class="flex-1 flex items-center px-4 bg-gray-50 rounded-xl">
+                            <i class="fas fa-search text-gray-400 mr-3"></i>
+                            <input id="home-search-input" type="text" placeholder="Cari skill, contoh: fotografi, desain..." class="w-full bg-transparent py-3 focus:outline-none text-gray-800">
+                        </div>
+                        <div class="sm:w-48 flex items-center px-4 bg-gray-50 rounded-xl">
+                            <i class="fas fa-map-marker-alt text-gray-400 mr-3"></i>
+                            <select id="home-location-select" class="w-full bg-transparent py-3 focus:outline-none text-gray-700 font-medium">
+                                <option value="">Semua Lokasi</option>
+                                <option value="Surabaya">Surabaya</option>
+                                <option value="Jakarta">Jakarta</option>
+                                <option value="Bandung">Bandung</option>
+                                <option value="Gresik">Gresik</option>
+                            </select>
+                        </div>
+                        <button onclick="handleHomeSearch()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-8 py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-brand-600/30">
+                            <span>Cari Skill</span>
+                        </button>
+                    </div>
+
+                    <!-- Call To Action -->
+                    <div class="mt-8 flex items-center justify-center gap-2 text-sm text-gray-600">
+                        <span>Punya keahlian menarik?</span>
+                        <button onclick="showPage('daftarkan-skill')" class="text-brand-600 font-bold hover:underline flex items-center gap-1">
+                            Punya Skill? Daftarkan Sekarang <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kategori Skill -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                <i class="fas fa-th-large text-brand-600"></i> Kategori Skill Populer
+            </h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+                <div onclick="filterCategory('Desain Grafis')" class="bg-white p-4 rounded-2xl text-center cursor-pointer hover:border-brand-500 border border-gray-100 soft-shadow transition hover:-translate-y-1">
+                    <div class="text-3xl mb-2">🎨</div>
+                    <p class="font-semibold text-xs text-gray-800">Desain Grafis</p>
+                </div>
+                <div onclick="filterCategory('Fotografi')" class="bg-white p-4 rounded-2xl text-center cursor-pointer hover:border-brand-500 border border-gray-100 soft-shadow transition hover:-translate-y-1">
+                    <div class="text-3xl mb-2">📷</div>
+                    <p class="font-semibold text-xs text-gray-800">Fotografi</p>
+                </div>
+                <div onclick="filterCategory('Editing Video')" class="bg-white p-4 rounded-2xl text-center cursor-pointer hover:border-brand-500 border border-gray-100 soft-shadow transition hover:-translate-y-1">
+                    <div class="text-3xl mb-2">🎬</div>
+                    <p class="font-semibold text-xs text-gray-800">Editing Video</p>
+                </div>
+                <div onclick="filterCategory('Makeup')" class="bg-white p-4 rounded-2xl text-center cursor-pointer hover:border-brand-500 border border-gray-100 soft-shadow transition hover:-translate-y-1">
+                    <div class="text-3xl mb-2">💄</div>
+                    <p class="font-semibold text-xs text-gray-800">Makeup & Kecantikan</p>
+                </div>
+                <div onclick="filterCategory('Mengajar')" class="bg-white p-4 rounded-2xl text-center cursor-pointer hover:border-brand-500 border border-gray-100 soft-shadow transition hover:-translate-y-1">
+                    <div class="text-3xl mb-2">📚</div>
+                    <p class="font-semibold text-xs text-gray-800">Mengajar / Les</p>
+                </div>
+                <div onclick="filterCategory('Teknisi')" class="bg-white p-4 rounded-2xl text-center cursor-pointer hover:border-brand-500 border border-gray-100 soft-shadow transition hover:-translate-y-1">
+                    <div class="text-3xl mb-2">🔧</div>
+                    <p class="font-semibold text-xs text-gray-800">Teknisi & Reparasi</p>
+                </div>
+                <div onclick="filterCategory('Memasak')" class="bg-white p-4 rounded-2xl text-center cursor-pointer hover:border-brand-500 border border-gray-100 soft-shadow transition hover:-translate-y-1">
+                    <div class="text-3xl mb-2">🍳</div>
+                    <p class="font-semibold text-xs text-gray-800">Memasak</p>
+                </div>
+                <div onclick="filterCategory('Menjahit')" class="bg-white p-4 rounded-2xl text-center cursor-pointer hover:border-brand-500 border border-gray-100 soft-shadow transition hover:-translate-y-1">
+                    <div class="text-3xl mb-2">🧵</div>
+                    <p class="font-semibold text-xs text-gray-800">Menjahit</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Skill Populer -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Skill Populer di Sekitarmu</h2>
+                    <p class="text-gray-500 text-sm mt-1">Penyedia jasa terverifikasi dengan ulasan terbaik</p>
+                </div>
+                <button onclick="showPage('cari-skill')" class="text-brand-600 font-semibold hover:underline flex items-center gap-1">
+                    Lihat Semua <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Talent Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="home-talent-grid">
+                <!-- Injected by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Business Model Showcase Section -->
+        <div class="bg-white border-y border-gray-100 py-16 my-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">Bagaimana SNAPS Bekerja?</h2>
+                    <p class="text-gray-500 mt-2">Menghubungkan keahlian lokal dengan kebutuhan sekitar secara mudah & transparan.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                    <div class="p-6 rounded-2xl bg-cream">
+                        <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+                        <h3 class="font-bold text-lg mb-2">Daftarkan Skill</h3>
+                        <p class="text-sm text-gray-600">Buat profil keahlianmu, tentukan tarif, dan unggah portofolio terbaikmu secara gratis.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-cream">
+                        <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                        <h3 class="font-bold text-lg mb-2">Cari Keahlian</h3>
+                        <p class="text-sm text-gray-600">Pengguna mencari jasa berdasarkan lokasi, kategori, ulasan, dan harga terbaik.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-cream">
+                        <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+                        <h3 class="font-bold text-lg mb-2">Kontak Direct</h3>
+                        <p class="text-sm text-gray-600">Hubungi langsung via WhatsApp tanpa perantara rumit untuk kesepakatan.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-cream">
+                        <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
+                        <h3 class="font-bold text-lg mb-2">Selesai & Review</h3>
+                        <p class="text-sm text-gray-600">Kerjaan selesai, berikan ulasan dan rating untuk membangun kredibilitas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. HALAMAN CARI SKILL -->
+    <div id="page-cari-skill" class="page-section hidden flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Header & Search Box -->
+        <div class="bg-white p-6 rounded-2xl soft-shadow border border-gray-100 mb-8">
+            <h1 class="text-2xl font-bold mb-4">Cari Skill & Jasa Keahlian</h1>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="md:col-span-2 relative">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
+                    <input id="search-input" type="text" placeholder="🔍 Cari skill..." class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <select id="filter-category" class="w-full py-3 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500 font-medium">
+                        <option value="">Semua Kategori</option>
+                        <option value="Fotografi">Fotografi</option>
+                        <option value="Desain Grafis">Desain Grafis</option>
+                        <option value="Editing Video">Editing Video</option>
+                        <option value="Makeup">Makeup & Kecantikan</option>
+                        <option value="Mengajar">Mengajar / Les</option>
+                        <option value="Teknisi">Teknisi & Reparasi</option>
+                    </select>
+                </div>
+                <div>
+                    <select id="filter-location" class="w-full py-3 px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500 font-medium">
+                        <option value="">Semua Lokasi</option>
+                        <option value="Surabaya">Surabaya</option>
+                        <option value="Jakarta">Jakarta</option>
+                        <option value="Bandung">Bandung</option>
+                        <option value="Gresik">Gresik</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Title -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="search-result-title" class="text-xl font-bold text-gray-800">Menampilkan Semua Penyedia Skill</h2>
+            <span id="result-count" class="text-sm text-gray-500">4 hasil ditemukan</span>
+        </div>
+
+        <!-- Cards List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="search-results-grid">
+            <!-- Dynamically Rendered -->
+        </div>
+    </div>
+
+    <!-- 3. HALAMAN PROFIL PEMILIK SKILL -->
+    <div id="page-profil" class="page-section hidden flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Profile Banner / Header -->
+        <div class="bg-white rounded-3xl soft-shadow border border-gray-100 overflow-hidden mb-8">
+            <div class="h-44 bg-gradient-to-r from-brand-600 to-emerald-800"></div>
+            <div class="px-6 sm:px-10 pb-8 relative">
+                <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between -mt-20 mb-6 gap-4">
+                    <div class="flex items-end gap-5">
+                        <img id="prof-img" src="" alt="Profile" class="w-32 h-32 rounded-2xl border-4 border-white object-cover shadow-md">
+                        <div class="mb-2">
+                            <div class="flex items-center gap-2">
+                                <h1 id="prof-name" class="text-2xl font-bold text-gray-900">Sinta Dewi</h1>
+                                <span class="bg-blue-100 text-blue-700 text-xs px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">
+                                    <i class="fas fa-check-circle"></i> Terverifikasi
+                                </span>
+                            </div>
+                            <p id="prof-skill" class="text-brand-700 font-medium">Fotografi Produk</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <button onclick="toggleFav(this)" class="p-3 bg-gray-100 text-gray-600 hover:text-red-500 rounded-xl transition">
+                            <i class="far fa-heart text-xl"></i>
+                        </button>
+                        <a id="prof-wa-btn" href="#" target="_blank" class="flex-1 sm:flex-none text-center bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-green-500/20">
+                            <i class="fab fa-whatsapp text-xl"></i> Hubungi via WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Info Badges -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-cream rounded-2xl border border-amber-100/50">
+                    <div>
+                        <p class="text-xs text-gray-500">Lokasi</p>
+                        <p id="prof-location" class="font-semibold text-gray-800">Surabaya</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Rating & Ulasan</p>
+                        <p id="prof-rating" class="font-semibold text-gray-800">⭐ 4.9 (28 ulasan)</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Harga Jasa Mulai</p>
+                        <p id="prof-price" class="font-semibold text-brand-700">Rp 75.000</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Respon Chat</p>
+                        <p class="font-semibold text-gray-800">&lt; 15 Menit</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Tabs / Body -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Tentan Section -->
+                <div class="bg-white p-6 sm:p-8 rounded-2xl soft-shadow border border-gray-100">
+                    <h2 class="text-xl font-bold mb-4">Tentang Saya</h2>
+                    <p id="prof-about" class="text-gray-600 leading-relaxed">
+                        Fotografer komersial berpengalaman lebih dari 3 tahun berfokus pada foto produk UMKM, katalog fashion, dan kuliner. Siap membantu membuat produk Anda terlihat lebih profesional dan menarik calon pembeli.
+                    </p>
+                </div>
+
+                <!-- Portofolio -->
+                <div class="bg-white p-6 sm:p-8 rounded-2xl soft-shadow border border-gray-100">
+                    <h2 class="text-xl font-bold mb-4">Portofolio Pekerjaan</h2>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="prof-portfolio">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500" class="rounded-xl h-36 w-full object-cover shadow-sm hover:opacity-90 cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500" class="rounded-xl h-36 w-full object-cover shadow-sm hover:opacity-90 cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500" class="rounded-xl h-36 w-full object-cover shadow-sm hover:opacity-90 cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- Pengalaman & Jenis Skill -->
+                <div class="bg-white p-6 sm:p-8 rounded-2xl soft-shadow border border-gray-100">
+                    <h2 class="text-xl font-bold mb-4">Spesialisasi & Keahlian</h2>
+                    <div class="flex flex-wrap gap-2 mb-6" id="prof-skills-tags">
+                        <span class="bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg text-sm font-semibold">Fotografi Produk</span>
+                        <span class="bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg text-sm font-semibold">Fotografi Makanan</span>
+                        <span class="bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg text-sm font-semibold">Editing Lightroom</span>
+                    </div>
+
+                    <h3 class="font-bold text-gray-800 mb-2">Pengalaman Jasa</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-1 text-sm">
+                        <li>Melayani 50+ UMKM lokal di Jawa Timur</li>
+                        <li>Partner fotografer brand kuliner lokal</li>
+                    </ul>
+                </div>
+
+                <!-- Ulasan -->
+                <div class="bg-white p-6 sm:p-8 rounded-2xl soft-shadow border border-gray-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold">Ulasan Pelanggan</h2>
+                        <button onclick="showPage('review-page')" class="text-brand-600 font-semibold text-sm hover:underline">
+                            + Tulis Ulasan
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="border-b pb-4">
+                            <div class="flex justify-between mb-1">
+                                <span class="font-bold text-gray-800">Rina S.</span>
+                                <span class="text-amber-500 font-bold">⭐⭐⭐⭐⭐</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Hasil fotonya bagus banget! Produk jualan saya jadi kelihatan premium. Komunikasi ramah & cepat.</p>
+                        </div>
+                        <div class="border-b pb-4">
+                            <div class="flex justify-between mb-1">
+                                <span class="font-bold text-gray-800">Budi Pratama</span>
+                                <span class="text-amber-500 font-bold">⭐⭐⭐⭐⭐</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Sangat profesional, pengerjaan cepat dan arahan gayanya mantap.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Info -->
+            <div class="space-y-6">
+                <div class="bg-cream p-6 rounded-2xl border border-amber-200/60">
+                    <h3 class="font-bold text-gray-900 mb-2">Jaminan Keamanan</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Selalu komunikasikan detail pesanan, kesepakatan harga, dan jadwalkan pengerjaan jasa dengan jelas melalui WhatsApp.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. HALAMAN DAFTARKAN SKILL -->
+    <div id="page-daftarkan-skill" class="page-section hidden flex-grow max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div class="bg-white p-8 sm:p-10 rounded-3xl soft-shadow border border-gray-100">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-extrabold text-gray-900">Punya Skill? Tampilkan Keahlianmu dan Temukan Pelanggan Baru.</h1>
+                <p class="text-gray-500 mt-2 text-sm">Isi data di bawah untuk mempublikasikan profil jasamu ke ribuan calon klien.</p>
+            </div>
+
+            <form id="form-daftar-skill" onsubmit="handleRegisterSkill(event)" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+                    <input type="text" required placeholder="Contoh: Rina Suryani" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Skill Utama / Judul Jasa</label>
+                        <input id="form-skill-title" type="text" required placeholder="Contoh: Les Privat Sains / Fisika" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kategori Skill</label>
+                        <select required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500 font-medium">
+                            <option value="">Pilih Kategori</option>
+                            <option value="Desain Grafis">Desain Grafis</option>
+                            <option value="Fotografi">Fotografi</option>
+                            <option value="Editing Video">Editing Video</option>
+                            <option value="Makeup">Makeup & Kecantikan</option>
+                            <option value="Mengajar">Mengajar / Les</option>
+                            <option value="Teknisi">Teknisi & Reparasi</option>
+                            <option value="Memasak">Memasak</option>
+                            <option value="Menjahit">Menjahit</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Lokasi / Domisili</label>
+                        <input type="text" required placeholder="Contoh: Surabaya" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Harga Jasa Mulai (Rp)</label>
+                        <input type="number" required placeholder="50000" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor WhatsApp</label>
+                    <input type="tel" required placeholder="6281234567890" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi Keahlian & Jasa</label>
+                    <textarea rows="4" required placeholder="Jelaskan pengalaman, keunggulan, dan layanan yang Anda tawarkan..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Profil (URL Gambar)</label>
+                    <input type="url" placeholder="https://images.unsplash.com/photo-..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-600/20 transition">
+                    Daftarkan Skill Sekarang
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. HALAMAN REVIEW & RATING -->
+    <div id="page-review" class="page-section hidden flex-grow max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div class="bg-white p-8 rounded-3xl soft-shadow border border-gray-100">
+            <h1 class="text-2xl font-bold mb-6 text-center">Beri Ulasan & Rating</h1>
+
+            <!-- Target User -->
+            <div class="flex items-center gap-4 p-4 bg-cream rounded-2xl mb-6">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-14 h-14 rounded-full object-cover">
+                <div>
+                    <h3 class="font-bold">Sinta Dewi</h3>
+                    <p class="text-xs text-brand-700">Fotografi Produk</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleReviewSubmit(event)" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Rating Kamu</label>
+                    <div class="flex gap-2 text-2xl text-amber-400 cursor-pointer">
+                        <i class="fas fa-star hover:opacity-80"></i>
+                        <i class="fas fa-star hover:opacity-80"></i>
+                        <i class="fas fa-star hover:opacity-80"></i>
+                        <i class="fas fa-star hover:opacity-80"></i>
+                        <i class="fas fa-star hover:opacity-80"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Ceritakan Pengalamanmu</label>
+                    <textarea rows="4" required placeholder="Apakah kamu puas dengan hasil jasanya?" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl transition">
+                    Kirim Review
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. HALAMAN LOGIN & DAFTAR -->
+    <div id="page-login" class="page-section hidden flex-grow max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        <div class="bg-white p-8 rounded-3xl soft-shadow border border-gray-100">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200 mb-6">
+                <button id="tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 pb-3 text-center font-bold text-brand-600 border-b-2 border-brand-600">Masuk</button>
+                <button id="tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 pb-3 text-center font-bold text-gray-400 border-b-2 border-transparent">Daftar</button>
+            </div>
+
+            <!-- Form Login -->
+            <form id="auth-login-form" onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Email / Nomor WhatsApp</label>
+                    <input type="text" required placeholder="user@email.com" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                    <input type="password" required placeholder="••••••••" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl transition shadow-md shadow-brand-600/20">
+                    Masuk
+                </button>
+            </form>
+
+            <!-- Form Register -->
+            <form id="auth-register-form" onsubmit="handleAuth(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap</label>
+                    <input type="text" required placeholder="Nama Anda" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Email / WhatsApp</label>
+                    <input type="text" required placeholder="08123456789" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                    <input type="password" required placeholder="••••••••" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tujuan Mendaftar</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer">
+                            <input type="radio" name="role" value="talent" checked class="text-brand-600 focus:ring-brand-500">
+                            <span class="text-sm font-medium">Saya memiliki skill & ingin buka jasa</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer">
+                            <input type="radio" name="role" value="client" class="text-brand-600 focus:ring-brand-500">
+                            <span class="text-sm font-medium">Saya mencari penyedia skill / jasa</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl transition shadow-md shadow-brand-600/20">
+                    Buat Akun Sekarang
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 7. HALAMAN DASHBOARD ADMIN (SKEMA DARI LEMBAR CATATAN / WIREFRAME) -->
+    <div id="page-admin-dashboard" class="page-section hidden flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Header Mode Admin -->
+        <div class="bg-amber-50 border border-amber-200 p-6 rounded-2xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-2 text-amber-800 font-bold text-lg">
+                    <i class="fas fa-user-shield"></i> Panel Kelola Admin SNAPS (Pemilik Web)
+                </div>
+                <p class="text-xs text-amber-700 mt-1">Hanya pemilik website/admin yang dapat melihat dan mengelola penghasilan serta data pengguna.</p>
+            </div>
+            <span class="bg-amber-200 text-amber-900 text-xs font-bold px-3 py-1.5 rounded-lg">Status Sistem: Aktif</span>
+        </div>
+
+        <!-- Revenue / Income Management Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl soft-shadow border border-gray-100">
+                <p class="text-xs font-semibold text-gray-500 uppercase">Total Penghasilan Admin</p>
+                <h3 class="text-2xl font-extrabold text-brand-700 mt-1">Rp 4.250.000</h3>
+                <span class="text-[11px] text-green-600 font-medium">↑ +18% bulan ini (Komisi 5% + Promosi)</span>
+            </div>
+            <div class="bg-white p-6 rounded-2xl soft-shadow border border-gray-100">
+                <p class="text-xs font-semibold text-gray-500 uppercase">Total Transaksi Selesai</p>
+                <h3 class="text-2xl font-extrabold text-gray-800 mt-1">142 Transaksi</h3>
+                <span class="text-[11px] text-gray-500">Estimasi nilai jasa Rp 85.000.000</span>
+            </div>
+            <div class="bg-white p-6 rounded-2xl soft-shadow border border-gray-100">
+                <p class="text-xs font-semibold text-gray-500 uppercase">Total Skill Terdaftar</p>
+                <h3 class="text-2xl font-extrabold text-gray-800 mt-1">86 Skill</h3>
+                <span class="text-[11px] text-blue-600 font-medium">+12 skill minggu ini</span>
+            </div>
+            <div class="bg-white p-6 rounded-2xl soft-shadow border border-gray-100">
+                <p class="text-xs font-semibold text-gray-500 uppercase">Promosi Profil (Slot Iklan)</p>
+                <h3 class="text-2xl font-extrabold text-purple-700 mt-1">Rp 1.100.000</h3>
+                <span class="text-[11px] text-purple-600">Dari 11 Talent Premium</span>
+            </div>
+        </div>
+
+        <!-- Layout Sesuai Bagan Kertas (Bagan Author / User Registration & Admin Dashboard Data) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Tampilan Data Pengguna & Pendaftaran Skill -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-2xl soft-shadow border border-gray-100">
+                <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center justify-between">
+                    <span>Data Pendaftar Skill Terbaru</span>
+                    <span class="text-xs bg-gray-100 px-2.5 py-1 rounded-lg text-gray-600 font-normal">Real-time</span>
+                </h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-600">
+                        <thead class="bg-cream text-xs uppercase text-gray-700 border-b">
+                            <tr>
+                                <th class="p-3">Nama Talent</th>
+                                <th class="p-3">Skill / Jasa</th>
+                                <th class="p-3">Domisili</th>
+                                <th class="p-3">WhatsApp</th>
+                                <th class="p-3">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-talent-table" class="divide-y">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cara Mengelola Penghasilan (Business Model Admin) -->
+            <div class="bg-white p-6 rounded-2xl soft-shadow border border-gray-100">
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Cara Mengelola Penghasilan Admin</h2>
+                <div class="space-y-4 text-xs text-gray-600">
+                    <div class="p-3 bg-brand-50 rounded-xl border border-brand-100">
+                        <p class="font-bold text-brand-800">1. Komisi Transaksi (5%)</p>
+                        <p class="mt-1">Dipotong otomatis dari tiap pemesanan resmi via platform SNAPS.</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-100">
+                        <p class="font-bold text-purple-800">2. Fitur "Sorot Skill / Promosi"</p>
+                        <p class="mt-1">Penyedia skill membayar Rp 25.000/minggu agar tampil di paling atas hasil pencarian.</p>
+                    </div>
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-100">
+                        <p class="font-bold text-amber-800">3. Langganan Akun Verified</p>
+                        <p class="mt-1">Badge centang biru terverifikasi dikenakan biaya verifikasi berkala.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-white mt-auto pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-gray-800">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="bg-brand-600 text-white p-2 rounded-xl">
+                            <i class="fas fa-bolt text-lg"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight">SNAPS<span class="text-brand-500">.</span></span>
+                    </div>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Platform digital yang mempertemukan orang yang memiliki skill dengan orang yang membutuhkan skill atau jasa tersebut secara cepat dan terpercaya.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold uppercase tracking-wider mb-4 text-gray-300">Navigasi</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><a href="#" onclick="showPage('home')" class="hover:text-white">Beranda</a></li>
+                        <li><a href="#" onclick="showPage('cari-skill')" class="hover:text-white">Cari Skill</a></li>
+                        <li><a href="#" onclick="showPage('daftarkan-skill')" class="hover:text-white">Daftarkan Skill</a></li>
+                        <li><a href="#" onclick="showPage('admin-dashboard')" class="hover:text-white">Panel Admin</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold uppercase tracking-wider mb-4 text-gray-300">Kategori</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><a href="#" onclick="filterCategory('Desain Grafis')" class="hover:text-white">Desain Grafis</a></li>
+                        <li><a href="#" onclick="filterCategory('Fotografi')" class="hover:text-white">Fotografi</a></li>
+                        <li><a href="#" onclick="filterCategory('Editing Video')" class="hover:text-white">Editing Video</a></li>
+                        <li><a href="#" onclick="filterCategory('Mengajar')" class="hover:text-white">Mengajar / Les</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold uppercase tracking-wider mb-4 text-gray-300">Kontak SNAPS</h4>
+                    <p class="text-xs text-gray-400 mb-2"><i class="fas fa-envelope mr-2"></i> halo@snaps.id</p>
+                    <p class="text-xs text-gray-400 mb-4"><i class="fab fa-whatsapp mr-2"></i> +62 812-3456-7890</p>
+                    <div class="flex space-x-3 text-gray-400">
+                        <a href="#" class="hover:text-white text-lg"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-white text-lg"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="hover:text-white text-lg"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-6 text-center text-xs text-gray-500">
+                &copy; 2026 SNAPS — Skills Network & Professional Services. All rights reserved. Prototype untuk Presentasi.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT & INTERACTIVE DEMO LOGIC -->
+    <script>
+        // Dummy Talent Data
+        let talentData = [
+            {
+                id: 1,
+                name: "Sinta Dewi",
+                skill: "Fotografi Produk",
+                category: "Fotografi",
+                location: "Surabaya",
+                rating: 4.9,
+                reviews: 28,
+                price: 75000,
+                wa: "6281234567890",
+                image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500",
+                about: "Fotografer komersial berpengalaman lebih dari 3 tahun berfokus pada foto produk UMKM, katalog fashion, dan kuliner.",
+                skillsTags: ["Fotografi Produk", "Fotografi Makanan", "Lightroom"],
+                portfolio: [
+                    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
+                    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
+                    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500"
+                ]
+            },
+            {
+                id: 2,
+                name: "Rizky Firmansyah",
+                skill: "Desain Grafis & Logo",
+                category: "Desain Grafis",
+                location: "Bandung",
+                rating: 4.8,
+                reviews: 42,
+                price: 100000,
+                wa: "6281987654321",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500",
+                about: "Desainer grafis spesialis branding UMKM, logo minimalis, dan materi promosi media sosial.",
+                skillsTags: ["Desain Logo", "Branding", "Photoshop", "Illustrator"],
+                portfolio: [
+                    "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=500",
+                    "https://images.unsplash.com/photo-1600132806370-bf17e65e942f?w=500"
+                ]
+            },
+            {
+                id: 3,
+                name: "Bagus Setiao",
+                skill: "Editing Video Reels & TikTok",
+                category: "Editing Video",
+                location: "Jakarta",
+                rating: 5.0,
+                reviews: 19,
+                price: 120000,
+                wa: "6281122334455",
+                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500",
+                about: "Video editor khusus konten pendek yang engaging, dilengkapi efek, subtitle dinamis, dan sound design viral.",
+                skillsTags: ["Editing Video", "Premiere Pro", "CapCut Pro"],
+                portfolio: [
+                    "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=500"
+                ]
+            },
+            {
+                id: 4,
+                name: "Maya Anggraini",
+                skill: "Les Privat Matematika & IPA",
+                category: "Mengajar",
+                location: "Gresik",
+                rating: 4.9,
+                reviews: 35,
+                price: 50000,
+                wa: "6285566778899",
+                image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500",
+                about: "Tutor berpengalaman mengajar siswa SD-SMP dengan metode belajar yang menyenangkan dan mudah dipahami.",
+                skillsTags: ["Les Privat IPA", "Matematika SD/SMP", "Metode Interaktif"],
+                portfolio: [
+                    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500"
+                ]
+            }
+        ];
+
+        let selectedTalent = talentData[0];
+
+        // Page Navigation Controller
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Render Talent Cards
+        function renderCards(data, targetContainerId) {
+            const container = document.getElementById(targetContainerId);
+            if (!container) return;
+
+            if (data.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">Tidak ada penyedia skill yang sesuai dengan pencarian Anda.</div>`;
+                return;
+            }
+
+            container.innerHTML = data.map(item => `
+                <div class="bg-white rounded-2xl border border-gray-100 soft-shadow overflow-hidden flex flex-col justify-between hover:-translate-y-1 transition duration-300">
+                    <div class="p-5">
+                        <div class="flex items-center gap-4 mb-4">
+                            <img src="${item.image}" class="w-16 h-16 rounded-2xl object-cover border">
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-lg line-clamp-1">${item.name}</h3>
+                                <p class="text-brand-700 font-semibold text-xs">${item.skill}</p>
+                                <p class="text-gray-400 text-xs mt-0.5"><i class="fas fa-map-marker-alt text-red-400 mr-1"></i>${item.location}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center text-xs py-2 px-3 bg-cream rounded-xl mb-4">
+                            <span class="font-bold text-amber-500">⭐ ${item.rating} <span class="text-gray-400 font-normal">(${item.reviews})</span></span>
+                            <span class="font-bold text-gray-800">Mulai <span class="text-brand-700">Rp ${item.price.toLocaleString('id-ID')}</span></span>
+                        </div>
+                        <p class="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4">${item.about}</p>
+                    </div>
+                    <div class="px-5 pb-5 pt-0 flex gap-2">
+                        <button onclick="toggleFav(this)" class="p-3 border border-gray-200 text-gray-400 hover:text-red-500 rounded-xl">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button onclick="viewProfile(${item.id})" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-xl text-sm text-center transition">
+                            Lihat Profil
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // View Profile Action
+        function viewProfile(id) {
+            const talent = talentData.find(t => t.id === id);
+            if (!talent) return;
+
+            selectedTalent = talent;
+            document.getElementById('prof-img').src = talent.image;
+            document.getElementById('prof-name').innerText = talent.name;
+            document.getElementById('prof-skill').innerText = talent.skill;
+            document.getElementById('prof-location').innerText = talent.location;
+            document.getElementById('prof-rating').innerText = `⭐ ${talent.rating} (${talent.reviews} ulasan)`;
+            document.getElementById('prof-price').innerText = `Rp ${talent.price.toLocaleString('id-ID')}`;
+            document.getElementById('prof-about').innerText = talent.about;
+            document.getElementById('prof-wa-btn').href = `https://wa.me/${talent.wa}?text=Halo%20${encodeURIComponent(talent.name)},%20saya%20menemukan%20profil%20Anda%20di%20SNAPS%20dan%20ingin%20bertanya%20mengenai%20jasa%20${encodeURIComponent(talent.skill)}.`;
+
+            // Skills tags
+            document.getElementById('prof-skills-tags').innerHTML = talent.skillsTags.map(st => `
+                <span class="bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg text-sm font-semibold">${st}</span>
+            `).join('');
+
+            // Portfolio
+            document.getElementById('prof-portfolio').innerHTML = talent.portfolio.map(p => `
+                <img src="${p}" class="rounded-xl h-36 w-full object-cover shadow-sm hover:opacity-90 cursor-pointer">
+            `).join('');
+
+            showPage('profil');
+        }
+
+        // Search & Filter Logic
+        function handleHomeSearch() {
+            const keyword = document.getElementById('home-search-input').value.trim();
+            const location = document.getElementById('home-location-select').value;
+
+            document.getElementById('search-input').value = keyword;
+            document.getElementById('filter-location').value = location;
+
+            applySearchFilter();
+            showPage('cari-skill');
+        }
+
+        function filterCategory(cat) {
+            document.getElementById('filter-category').value = cat;
+            document.getElementById('search-input').value = "";
+            applySearchFilter();
+            showPage('cari-skill');
+        }
+
+        function applySearchFilter() {
+            const keyword = document.getElementById('search-input').value.toLowerCase();
+            const category = document.getElementById('filter-category').value;
+            const location = document.getElementById('filter-location').value;
+
+            const filtered = talentData.filter(t => {
+                const matchKeyword = t.name.toLowerCase().includes(keyword) || t.skill.toLowerCase().includes(keyword) || t.about.toLowerCase().includes(keyword);
+                const matchCategory = category === "" || t.category === category || t.skill.includes(category);
+                const matchLocation = location === "" || t.location === location;
+                return matchKeyword && matchCategory && matchLocation;
+            });
+
+            renderCards(filtered, 'search-results-grid');
+            document.getElementById('search-result-title').innerText = keyword ? `Hasil Pencarian: "${keyword}"` : "Menampilkan Semua Penyedia Skill";
+            document.getElementById('result-count').innerText = `${filtered.length} hasil ditemukan`;
+        }
+
+        // Add Listeners to Search Filters
+        document.getElementById('search-input').addEventListener('input', applySearchFilter);
+        document.getElementById('filter-category').addEventListener('change', applySearchFilter);
+        document.getElementById('filter-location').addEventListener('change', applySearchFilter);
+
+        // Handle Register Skill (Flow 2)
+        function handleRegisterSkill(e) {
+            e.preventDefault();
+            const skillTitle = document.getElementById('form-skill-title').value;
+
+            showToast("Skill berhasil didaftarkan!");
+            
+            // Add dummy data dynamically
+            const newTalent = {
+                id: talentData.length + 1,
+                name: "Pengguna Baru (Anda)",
+                skill: skillTitle,
+                category: "Lainnya",
+                location: "Surabaya",
+                rating: 5.0,
+                reviews: 1,
+                price: 50000,
+                wa: "6281234567890",
+                image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500",
+                about: "Penyedia jasa baru yang siap melayani dengan profesional.",
+                skillsTags: [skillTitle],
+                portfolio: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500"]
+            };
+
+            talentData.unshift(newTalent);
+            renderCards(talentData, 'home-talent-grid');
+            renderAdminTable();
+
+            setTimeout(() => {
+                showPage('home');
+            }, 1500);
+        }
+
+        // Handle Review Submission
+        function handleReviewSubmit(e) {
+            e.preventDefault();
+            showToast("Ulasan berhasil dikirim!");
+            setTimeout(() => {
+                showPage('profil');
+            }, 1200);
+        }
+
+        // Toggle Favorite
+        function toggleFav(btn) {
+            const icon = btn.querySelector('i');
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas', 'text-red-500');
+            } else {
+                icon.classList.remove('fas', 'text-red-500');
+                icon.classList.add('far');
+            }
+        }
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Switch Auth Tabs
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('auth-login-form').classList.remove('hidden');
+                document.getElementById('auth-register-form').classList.add('hidden');
+                document.getElementById('tab-btn-login').className = "flex-1 pb-3 text-center font-bold text-brand-600 border-b-2 border-brand-600";
+                document.getElementById('tab-btn-register').className = "flex-1 pb-3 text-center font-bold text-gray-400 border-b-2 border-transparent";
+            } else {
+                document.getElementById('auth-login-form').classList.add('hidden');
+                document.getElementById('auth-register-form').classList.remove('hidden');
+                document.getElementById('tab-btn-register').className = "flex-1 pb-3 text-center font-bold text-brand-600 border-b-2 border-brand-600";
+                document.getElementById('tab-btn-login').className = "flex-1 pb-3 text-center font-bold text-gray-400 border-b-2 border-transparent";
+            }
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            showToast("Berhasil Masuk ke SNAPS!");
+            setTimeout(() => {
+                showPage('home');
+            }, 1000);
+        }
+
+        // Populate Admin Dashboard Data
+        function renderAdminTable() {
+            const tableBody = document.getElementById('admin-talent-table');
+            if (!tableBody) return;
+
+            tableBody.innerHTML = talentData.map(t => `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-3 flex items-center gap-2">
+                        <img src="${t.image}" class="w-8 h-8 rounded-full object-cover">
+                        <span class="font-bold text-gray-800">${t.name}</span>
+                    </td>
+                    <td class="p-3 font-semibold text-brand-700">${t.skill}</td>
+                    <td class="p-3">${t.location}</td>
+                    <td class="p-3 text-xs text-gray-500">${t.wa}</td>
+                    <td class="p-3">
+                        <button onclick="viewProfile(${t.id})" class="text-xs bg-brand-100 text-brand-800 px-2.5 py-1 rounded-md font-semibold hover:bg-brand-200">Pratinjau</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initial Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards(talentData, 'home-talent-grid');
+            renderCards(talentData, 'search-results-grid');
+            renderAdminTable();
+        });
+    </script>
+</body>
+</html>
